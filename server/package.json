@@ -6,12 +6,17 @@
     "start": "bun src/index.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.7.0",
+    "@prisma/client": "^7.7.0",
     "@types/cors": "^2.8.19",
     "cors": "^2.8.6",
-    "express": "^5.1.0"
+    "dotenv": "^17.4.2",
+    "express": "^5.1.0",
+    "prisma": "^7.7.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/node": "^25.6.0",
     "typescript": "^5.8.3"
   }
 }
