@@ -1,23 +1,30 @@
-import { useEffect, useState } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import { authClient } from './lib/auth-client'
+import Login from './pages/Login'
+import Home from './pages/Home'
 
-function Home() {
-  const [message, setMessage] = useState<string | null>(null)
+function ProtectedRoute() {
+  const { data: session, isPending } = authClient.useSession()
 
-  useEffect(() => {
-    fetch('/api/health')
-      .then((res) => res.json())
-      .then((data) => setMessage(data.status))
-      .catch(() => setMessage('Failed to connect to server'))
-  }, [])
+  if (isPending) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin" />
+      </div>
+    )
+  }
 
-  return <h1>{message ?? 'Loading...'}</h1>
+  return session ? <Outlet /> : <Navigate to="/login" replace />
 }
 
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route element={<ProtectedRoute />}>
+        <Route path="/" element={<Home />} />
+      </Route>
+      <Route path="/login" element={<Login />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )
 }
